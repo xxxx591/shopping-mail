@@ -1,0 +1,36 @@
+{
+  "status": "0",
+  "msg": "",
+  "result": [{
+      "productId": "100001",
+      "productName": "小米X6",
+      "productPrice": 2499,
+      "productImg": "1.jpg"
+    },
+    {
+      "productId": "100001",
+      "productName": "小米",
+      "productPrice": 299,
+      "productImg": "2.jpg"
+    },
+    {
+      "productId": "100001",
+      "productName": "Find-X",
+      "productPrice": 2099,
+      "productImg": "3.jpg"
+    },
+    {
+      "productId": "100001",
+      "productName": "lele",
+      "productPrice": 499,
+      "productImg": "4.jpg"
+    },
+    {
+      "productId": "100001",
+      "productName": "乐乐",
+      "productPrice": 1499,
+      "productImg": "5.jpg"
+    }
+  ]
+
+}
