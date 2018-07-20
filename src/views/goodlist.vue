@@ -8,8 +8,8 @@
         <div class="container">
           <div class="filter-nav">
             <span class="sortby">价格排序:</span>
-            <a href="javascript:void(0)" class="default cur">默认</a>
-            <a href="javascript:void(0)" class="price">价格从高到低 <svg class="icon icon-arrow-short"><use xlink:href="#icon-arrow-short"></use></svg></a>
+            <a href="javascript:void(0)" class="default" :class="{'cur':sortStatic == true}" @click="defaultPrice()">默认</a>
+            <a href="javascript:void(0)" class="price" @click="changePrice()" :class="{'cur':sortStatic == false}">价格从高到低 <svg class="icon icon-arrow-short"><use xlink:href="#icon-arrow-short"></use></svg></a>
             <a href="javascript:void(0)" class="filterby stopPop" @click="showFilterPop">价格列表</a>
           </div>
           <div class="accessory-result">
@@ -34,7 +34,7 @@
                     </div>
                     <div class="main">
                       <div class="name">{{val.productName}}</div>
-                      <div class="price">{{val.productPrice}}</div>
+                      <div class="price">{{val.productPrice}}元</div>
                       <div class="btn-area">
                         <a href="javascript:;" class="btn btn--m">加入购物车</a>
                       </div>
@@ -77,7 +77,9 @@ export default {
       ],
       PriceChecek: "all",
       filterBy: false,
-      overLayFalg: false
+      overLayFalg: false,
+      sort: false,
+      sortStatic: true
     };
   },
   mounted() {
@@ -85,9 +87,17 @@ export default {
   },
   methods: {
     getGoodList() {
-      axios.get("static/mock/goodlist.json").then(res => {
-        this.goodList = res.data.result;
-      });
+      let params = {
+        sort: this.sort ? 1 : -1
+      };
+      axios
+        .get("/api/users", {
+          params: params
+        })
+        .then(res => {
+          this.goodList = res.data;
+          console.log(res);
+        });
     },
     check(index) {
       this.PriceChecek = index;
@@ -101,9 +111,20 @@ export default {
       this.filterBy = true;
       this.overLayFalg = true;
     },
-    closePop(){
+    closePop() {
       this.filterBy = false;
       this.overLayFalg = false;
+    },
+    changePrice() {
+      this.sort = !this.sort;
+      this.getGoodList();
+      this.sortStatic = false;
+    },
+    defaultPrice() {
+      this.sortStatic = true;
+      this.sort = !this.sort;
+      this.getGoodList();
+
     }
   },
   components: {
