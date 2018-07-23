@@ -76,6 +76,10 @@ export default {
         {
           StartPrice: "1000.00",
           EndPrice: "2000.00"
+        },
+        {
+          StartPrice: "2000.00",
+          EndPrice: "更多"
         }
       ],
       PriceChecek: "all",
@@ -86,7 +90,8 @@ export default {
       sortStatic: true,
       page: 0,
       pageSize: 8,
-      dataFalg: true
+      dataFalg: true,
+      selectPrice: true,
     };
   },
   mounted() {
@@ -95,10 +100,18 @@ export default {
   methods: {
     getGoodList() {
       let params = {
-        sort: this.sort ? 1 : -1,
         page: this.page,
-        pageSize: this.pageSize
+        pageSize: this.pageSize,
+        priceLevel: this.PriceChecek
       };
+      if (this.PriceChecek == "all") {
+        this.dataFalg = true;
+        
+      } else {
+        this.isAll = true;
+        this.goodList = [];
+        this.dataFalg = false;
+      }
       axios
         .get("/api/users", {
           params: params
@@ -111,13 +124,28 @@ export default {
           console.log(res);
         });
     },
+    cpmpare(property) {
+      return (obj1, obj2) => {
+        var value1 = obj1[property];
+        var value2 = obj2[property];
+        return value2 - value1; // 降序
+      };
+    },
     check(index) {
       this.PriceChecek = index;
       this.closePop();
+      console.log(index);
+      this.getGoodList();
     },
     checkAll() {
+      this.goodList = [];
+      this.page = 0;
       this.PriceChecek = "all";
       this.closePop();
+      if(this.page == 0){
+        this.getGoodList();
+        this.page++
+      }
     },
     showFilterPop() {
       this.filterBy = true;
@@ -128,10 +156,7 @@ export default {
       this.overLayFalg = false;
     },
     changePrice() {
-      this.sort = !this.sort;
-      this.getGoodList();
-      this.sortStatic = false;
-      console.log(this.goodList);
+      this.goodList = this.goodList.sort(this.cpmpare("productPrice"));
     },
     defaultPrice() {
       this.sortStatic = true;
@@ -150,7 +175,7 @@ export default {
       this.busy = true;
       setTimeout(() => {
         this.busy = false;
-      }, 1000);
+      }, 2000);
     }
   },
   components: {

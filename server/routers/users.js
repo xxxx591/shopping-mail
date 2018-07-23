@@ -12,15 +12,40 @@ router.get('/', (req, res) => {
     port: 3306,
     database: "test",
     user: "root",
-    password: "root"
+    password: "root",
+    multipleStatements: true
   });
-  let sql1 = 'select * from `goods` where productPrice>500 and productPrice<=1000';
-  let sql ='SELECT * FROM `goods` limit ' + (req.query.page * req.query.pageSize) + ',8 ';
-  if (req.query.sort == 1) {
-    sql = 'SELECT * FROM `goods` ORDER BY `productPrice` DESC';
-  } else {
-    sql = sql;
+  var stawrtPrice, endPrice;
+  let sql = 'SELECT * FROM goods gs'
+  let sql1 = ' WHERE 1=1 AND gs.productPrice >= 0 AND gs.productPrice <= 500';
+  let sql2 = ' limit ' + (req.query.page * req.query.pageSize) + ',8 ';
+  let sql3 = ' LIMIT 0,8'
 
+  switch (req.query.priceLevel) {
+    case 'all':
+      sql = sql + sql2;
+      break;
+    case '0':
+      stawrtPrice = 0;
+      endPrice = 500
+      sql = sql + ' WHERE 1=1 AND gs.productPrice >= 0 AND gs.productPrice <= 500' 
+      console.log(sql);
+      break;
+    case '1':
+      stawrtPrice = 500;
+      endPrice = 1000
+      sql = sql + ' WHERE 1=1 AND gs.productPrice >= 500 AND gs.productPrice <= 1000'
+      break;
+    case '2':
+      stawrtPrice = 1000;
+      endPrice = 2000
+      sql = sql + ' WHERE 1=1 AND gs.productPrice >= 1000 AND gs.productPrice <= 2000'
+      break;
+    default:
+      stawrtPrice = 1000;
+      endPrice = 999999999
+      sql = sql + ' WHERE 1=1 AND gs.productPrice >= 2000 AND gs.productPrice <= 99999'
+      break;
   }
   connection.connect(err => {
     if (err) {
