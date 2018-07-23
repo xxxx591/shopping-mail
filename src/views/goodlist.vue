@@ -30,7 +30,7 @@
                 <ul>
                   <li v-for="(val,index) of goodList" :key="index" >
                     <div class="pic">
-                      <a href="#"><img v-lazy="'static/'+val.productImg" alt=""></a>
+                      <a href="#"><img v-lazy="'static/'+val.productImg" alt="" :key="val.productImg"></a>
                     </div>
                     <div class="main">
                       <div class="name">{{val.productName}}</div>
@@ -41,6 +41,9 @@
                     </div>
                   </li>
                 </ul>
+                <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="5" class="load-more">
+                  加载中...
+                </div>
               </div>
             </div>
           </div>
@@ -76,26 +79,35 @@ export default {
         }
       ],
       PriceChecek: "all",
+      busy: false,
       filterBy: false,
       overLayFalg: false,
       sort: false,
-      sortStatic: true
+      sortStatic: true,
+      page: 0,
+      pageSize: 8,
+      dataFalg: true
     };
   },
   mounted() {
-    this.getGoodList();
+    // this.getGoodList();
   },
   methods: {
     getGoodList() {
       let params = {
-        sort: this.sort ? 1 : -1
+        sort: this.sort ? 1 : -1,
+        page: this.page,
+        pageSize: this.pageSize
       };
       axios
         .get("/api/users", {
           params: params
         })
         .then(res => {
-          this.goodList = res.data;
+          this.goodList = this.goodList.concat(res.data);
+          if (res.data < this.pageSize) {
+            this.dataFalg = false;
+          }
           console.log(res);
         });
     },
@@ -119,12 +131,26 @@ export default {
       this.sort = !this.sort;
       this.getGoodList();
       this.sortStatic = false;
+      console.log(this.goodList);
     },
     defaultPrice() {
       this.sortStatic = true;
       this.sort = !this.sort;
       this.getGoodList();
-
+    },
+    loadMore() {
+      console.log(this.page);
+      console.log(this.dataFalg);
+      if (this.dataFalg) {
+        this.getGoodList();
+        this.page++;
+      } else {
+        return;
+      }
+      this.busy = true;
+      setTimeout(() => {
+        this.busy = false;
+      }, 1000);
     }
   },
   components: {

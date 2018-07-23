@@ -6,7 +6,7 @@ let mysql = require('mysql')
 
 
 router.get('/', (req, res) => {
-  console.log(req.query.sort);
+  console.log(req.query);
   let connection = mysql.createConnection({
     host: "47.98.191.251",
     port: 3306,
@@ -14,9 +14,10 @@ router.get('/', (req, res) => {
     user: "root",
     password: "root"
   });
-  let sql = 'SELECT * FROM `goods` ';
+  let sql1 = 'select * from `goods` where productPrice>500 and productPrice<=1000';
+  let sql ='SELECT * FROM `goods` limit ' + (req.query.page * req.query.pageSize) + ',8 ';
   if (req.query.sort == 1) {
-    sql = sql += 'ORDER BY `productPrice` DESC';
+    sql = 'SELECT * FROM `goods` ORDER BY `productPrice` DESC';
   } else {
     sql = sql;
 
