@@ -5,9 +5,11 @@ let app = express();
 let mysql = require('mysql')
 let index = require('./routers/index')
 let users = require('./routers/users')
+let shoppingCart = require('./routers/shoppingCart')
 
 app.use('/', index);
 app.use('/users', users);
+app.use('/shoppingCart', shoppingCart);
 
 
 

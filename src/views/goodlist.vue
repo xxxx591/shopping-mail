@@ -36,7 +36,7 @@
                       <div class="name">{{val.productName}}</div>
                       <div class="price">{{val.productPrice}}元</div>
                       <div class="btn-area">
-                        <a href="javascript:;" class="btn btn--m">加入购物车</a>
+                        <a href="javascript:;" class="btn btn--m" @click="addcarts(val.productId)">加入购物车</a>
                       </div>
                     </div>
                   </li>
@@ -91,7 +91,7 @@ export default {
       page: 0,
       pageSize: 8,
       dataFalg: true,
-      selectPrice: true,
+      selectPrice: true
     };
   },
   mounted() {
@@ -106,7 +106,6 @@ export default {
       };
       if (this.PriceChecek == "all") {
         this.dataFalg = true;
-        
       } else {
         this.isAll = true;
         this.goodList = [];
@@ -142,9 +141,9 @@ export default {
       this.page = 0;
       this.PriceChecek = "all";
       this.closePop();
-      if(this.page == 0){
+      if (this.page == 0) {
         this.getGoodList();
-        this.page++
+        this.page++;
       }
     },
     showFilterPop() {
@@ -163,6 +162,20 @@ export default {
       this.sort = !this.sort;
       this.getGoodList();
     },
+    addcarts(index) {
+      console.log(index);
+      axios
+        .post("/api/shoppingCart/addcarts", {
+          
+          params: {
+            productId: index
+          }
+        })
+        .then(res => {
+          console.log(res);
+        });
+    },
+
     loadMore() {
       console.log(this.page);
       console.log(this.dataFalg);
