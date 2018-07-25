@@ -166,13 +166,14 @@ export default {
       console.log(index);
       axios
         .post("/api/shoppingCart/addcarts", {
-          
           params: {
             productId: index
           }
         })
         .then(res => {
-          console.log(res);
+          if (res.data.static == 1) {
+            alert('加入购物车成功');
+          }
         });
     },
 

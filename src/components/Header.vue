@@ -16,7 +16,7 @@
                 <div class="navbar-menu-container">
                 <!--<a href="/" class="navbar-link">我的账户</a>-->
                 <span class="navbar-link"></span>
-                <a href="javascript:void(0)" class="navbar-link">登录</a>
+                <a href="javascript:void(0)" class="navbar-link" @click="login()">登录</a>
                 <a href="javascript:void(0)" class="navbar-link">退出</a>
                     <div class="navbar-cart-container">
                         <span class="navbar-cart-count"></span>
@@ -28,16 +28,127 @@
                     </div>
                 </div>
             </div>
+                <div class="cover" v-show="loginShow"></div> 
+                <div class="login" v-show="loginShow">
+                    <div class="header">
+                        <div class="switch" id="switch">
+                            <a class="switch_btn_focus" id="switch_qlogin" href="javascript:void(0);" @click="loginup()">快速登录</a>
+                            <a class="switch_btn" id="switch_login" href="javascript:void(0);" @click="loginin()">快速注册</a>
+                            <div class="switch_bottom" id="switch_bottom" style="position: absolute; width: 64px; left: 0px;" v-if="showmodle"></div>
+                            <div class="switch_bottom" id="switch_bottom" style="position: absolute; width: 64px; right: 0px;" v-else></div>
+                        </div>
+                    </div>
+                    <div class="web_qr_login" id="web_qr_login" style="display: block; height: 235px;" v-if="showmodle">
+                        <div class="web_login" id="web_login">
+                            <div class="login-box">
+                                <div class="login_form">
+                                    <input type="hidden" name="did" value="0"/>
+                                    <input type="hidden" name="to" value="log"/>
+                                    <div class="uinArea" id="uinArea">
+                                        <label class="input-tips" for="u">帐号：</label>
+                                        <div class="inputOuter" id="uArea">
+                                            <input type="text" id="u" name="username" v-model="username" class="inputstyle"/>
+                                        </div>
+                                    </div>
+                                    <div class="pwdArea" id="pwdArea">
+                                        <label class="input-tips" for="p">密码：</label>
+                                        <div class="inputOuter" id="pArea">
+                                            <input type="password" id="p" name="password" v-model="userpwd" class="inputstyle"/>
+                                        </div>
+                                    </div>
+                                    <div style="padding-left:50px;margin-top:20px;">
+                                        <input type="submit" value="登 录" style="width:150px;" class="button_blue" @click="userLogin()"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="qlogin" id="qlogin" style="" v-else>
+                        <div class="web_login">
+                            <form name="form2" id="regUser" accept-charset="utf-8" action="" method="post">
+                                <input type="hidden" name="to" value="reg"/>
+                                <input type="hidden" name="did" value="0"/>
+                                <ul class="reg_form" id="reg-ul">
+                                    <div id="userCue" class="cue">
+                                        快速注册请注意格式
+                                    </div>
+                                    <li>
+                                    <label for="user" class="input-tips2">用户名：</label>
+                                    <div class="inputOuter2">
+                                        <input type="text" id="user" name="user" maxlength="16" class="inputstyle2"/>
+                                    </div>
+                                    </li>
+                                    <li>
+                                    <label for="passwd" class="input-tips2">密码：</label>
+                                    <div class="inputOuter2">
+                                        <input type="password" id="passwd" name="passwd" maxlength="16" class="inputstyle2"/>
+                                    </div>
+                                    </li>
+                                    <li>
+                                    <label for="passwd2" class="input-tips2">确认密码：</label>
+                                    <div class="inputOuter2">
+                                        <input type="password" id="passwd2" name="" maxlength="16" class="inputstyle2"/>
+                                    </div>
+                                    </li>
+                                    <li>
+                                    <label for="qq" class="input-tips2">QQ：</label>
+                                    <div class="inputOuter2">
+                                        <input type="text" id="qq" name="qq" maxlength="10" class="inputstyle2"/>
+                                    </div>
+                                    </li>
+                                    <li>
+                                    <div class="inputArea" style="text-align:center">
+                                        <input type="button" id="reg" class="button_blue" value="立即注册"/>
+                                    </div>
+                                    </li>
+                                </ul>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </header>
 </template>
 <script>
+import "@/assets/css/login2.css";
+import axios from "axios";
 export default {
-  return() {
-    data: {
-      msg: "头部页面";
-    }
+  data() {
+    return {
+      msg: "头部页面",
+      loginShow: false,
+      showmodle: true,
+      username:'',
+      userpwd:'',
+    };
   },
-  methods: {}
+  methods: {
+    login() {
+      this.loginShow = true;
+    },
+    loginup() {
+      this.showmodle = true;
+    },
+    loginin() {
+      this.showmodle = false;
+    },
+    userLogin() {
+      axios
+        .post("/api/loginup/userlogin", {
+          params: {
+              username:this.username,
+              userpwd:this.userpwd
+          }
+        })
+        .then(res => {
+            console.log('1');
+        });
+    }
+  }
 };
 </script>
+
+<style scoped>
+</style>
