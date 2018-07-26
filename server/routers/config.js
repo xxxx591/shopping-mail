@@ -1,9 +1,11 @@
 var config = {
-    database: 'test', // 使用哪个数据库
-    username: 'root', // 用户名
-    password: 'root', // 口令
-    host: '47.98.191.251', // 主机名
-    port: 3306 // 端口号，MySQL默认3306
+  host: "47.98.191.251",
+  port: 3306,
+  database: "test",
+  user: "root",
+  password: "root",
+  multipleStatements: true
 };
+
 
 module.exports = config;

@@ -4,17 +4,11 @@ let router = express.Router();
 
 let mysql = require('mysql')
 
+let config = require('./config')
 
 router.get('/', (req, res) => {
   console.log(req.query);
-  let connection = mysql.createConnection({
-    host: "47.98.191.251",
-    port: 3306,
-    database: "test",
-    user: "root",
-    password: "root",
-    multipleStatements: true
-  });
+  let connection = mysql.createConnection(config);
   var stawrtPrice, endPrice;
   let sql = 'SELECT * FROM goods gs'
   let sql1 = ' WHERE 1=1 AND gs.productPrice >= 0 AND gs.productPrice <= 500';

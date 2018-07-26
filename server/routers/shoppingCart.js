@@ -2,7 +2,7 @@ let express = require('express');
 let router = express.Router();
 let mysql = require('mysql');
 let bodyParser = require('body-parser')
-
+let config = require('./config')
 
 
 router.post('/addcarts', bodyParser.json(), (req, res, next) => {
@@ -15,14 +15,7 @@ router.post('/addcarts', bodyParser.json(), (req, res, next) => {
   let selectsql = `select * from goods gs where 1=1 and gs.productId = ${productIds}`
   let insertsql = `insert into catList(user_id,productId,productImg,productName,productPrice,productNum) values(?,?,?,?,?,?)`
   let updatesql = `update catList cl set cl.productNum = ? where cl.id = ?`
-  let connection = mysql.createConnection({
-    host: "47.98.191.251",
-    port: 3306,
-    database: "test",
-    user: "root",
-    password: "root",
-    multipleStatements: true
-  });
+  let connection = mysql.createConnection(config);
   connection.connect(err => {
     if (err) {
       console.log(err);
