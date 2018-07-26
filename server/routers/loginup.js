@@ -22,16 +22,21 @@ router.post("/register", bodyParser.json(), (req, res, next) => {
       console.log(err.message);
     }
     if (result[0]) {
+      console.log(result[0].username);
+      res.cookie("userId", result[0].user_id, {
+        path: "/",
+        maxAge: 1000 * 60 * 60
+      });
       res.json({
         static: "1",
         msg: "登录成功",
-        data: result
+        username: result[0].username
       });
     } else {
       res.json({
         static: "2",
         msg: "登录失败，账号密码错误",
-        data: result
+        result: result
       });
     }
   });
@@ -68,7 +73,7 @@ router.post("/signin", bodyParser.json(), (req, res, next) => {
         res.json({
           static: "1",
           msg: "注册成功！",
-          result
+          username: result[0].username
         });
       });
       connection.end();

@@ -16,9 +16,9 @@
       <div class="navbar-right-container" style="display: flex;">
         <div class="navbar-menu-container">
           <!--<a href="/" class="navbar-link">我的账户</a>-->
-          <span class="navbar-link"></span>
-          <a href="javascript:void(0)" class="navbar-link" @click="login()">登录</a>
-          <a href="javascript:void(0)" class="navbar-link">退出</a>
+          <span class="navbar-link" v-text="nickName" v-if="nickName"></span>
+          <a href="javascript:void(0)" class="navbar-link" @click="login()" v-else>登录</a>
+          <a href="javascript:void(0)" class="navbar-link" v-if="nickName">退出</a>
           <div class="navbar-cart-container">
             <span class="navbar-cart-count"></span>
             <a class="navbar-link navbar-cart-link" href="/#/cart">
@@ -29,7 +29,7 @@
           </div>
         </div>
       </div>
-      <div class="cover" v-show="loginShow"></div>
+      <div class="cover" v-show="loginShow" @click="cancelLogin()"></div>
       <div class="login" v-show="loginShow">
         <div class="header">
           <div class="switch" id="switch">
@@ -135,7 +135,8 @@ export default {
       userphone: "",
       worngpwd: false,
       signinworng: false,
-      signinmsg: ""
+      signinmsg: "",
+      nickName:""
     };
   },
   methods: {
@@ -148,6 +149,10 @@ export default {
     loginin() {
       this.showmodle = false;
     },
+    cancelLogin() {
+      this.loginShow = false;
+    },
+
     userLogin() {
       axios
         .post("/api/loginup/register", {
@@ -164,6 +169,8 @@ export default {
           } else {
             this.worngpwd = false;
             console.log("登录成功");
+            this.loginShow = false;
+            this.nickName = res.data.username
           }
         });
     },
@@ -178,7 +185,7 @@ export default {
             }
           })
           .then(res => {
-              console.log(res);
+            console.log(res);
             this.signinworng = true;
             this.signinmsg = res.data.msg;
           });
