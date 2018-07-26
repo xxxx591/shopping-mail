@@ -18,7 +18,7 @@
           <!--<a href="/" class="navbar-link">我的账户</a>-->
           <span class="navbar-link" v-text="nickName" v-if="nickName"></span>
           <a href="javascript:void(0)" class="navbar-link" @click="login()" v-else>登录</a>
-          <a href="javascript:void(0)" class="navbar-link" v-if="nickName">退出</a>
+          <a href="javascript:void(0)" class="navbar-link" v-if="nickName" @click="logout()">退出</a>
           <div class="navbar-cart-container">
             <span class="navbar-cart-count"></span>
             <a class="navbar-link navbar-cart-link" href="/#/cart">
@@ -136,7 +136,7 @@ export default {
       worngpwd: false,
       signinworng: false,
       signinmsg: "",
-      nickName:""
+      nickName: ""
     };
   },
   methods: {
@@ -170,7 +170,7 @@ export default {
             this.worngpwd = false;
             console.log("登录成功");
             this.loginShow = false;
-            this.nickName = res.data.username
+            this.nickName = res.data.username;
           }
         });
     },
@@ -193,6 +193,12 @@ export default {
         this.signinmsg = "两次密码不一致，请确认！";
         this.signinworng = true;
       }
+    },
+    logout() {
+      axios.post("/api/loginup/logout").then(res => {
+          this.nickName = '';
+
+      });
     }
   }
 };

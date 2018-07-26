@@ -81,4 +81,18 @@ router.post("/signin", bodyParser.json(), (req, res, next) => {
   });
 });
 
+// 退出登录接口
+
+router.post('/logout', bodyParser.json(), (req, res, next) => {
+  res.cookie('userId', '', {
+    path: '/',
+    maxAge: -1
+  })
+  res.json({
+    static: '0',
+    msg: "退出成功，数据以清理"
+  })
+})
+
+
 module.exports = router;
