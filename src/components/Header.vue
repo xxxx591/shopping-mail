@@ -98,13 +98,13 @@
               <li>
                 <label for="qq" class="input-tips2">联系方式：</label>
                 <div class="inputOuter2">
-                  <input type="text" id="phone" name="phone" maxlength="11" class="inputstyle2" />
+                  <input type="text" id="phone" name="phone" maxlength="11" class="inputstyle2" v-model="userphone"/>
                 </div>
               </li>
               <li>
                   <div v-show="signinworng">
-                  <p style="color:red;font-size:14px;">
-                    两次输入密码不一致请确认
+                  <p style="color:red;font-size:14px;" >
+                    {{signinmsg}}
                   </p>
                 </div>
               </li>
@@ -134,7 +134,8 @@ export default {
       againpwd: "",
       userphone: "",
       worngpwd: false,
-      signinworng: false
+      signinworng: false,
+      signinmsg: ""
     };
   },
   methods: {
@@ -168,7 +169,6 @@ export default {
     },
     signin() {
       if (this.userpwd == this.againpwd) {
-        this.signinworng = false;
         axios
           .post("/api/loginup/signin", {
             params: {
@@ -179,8 +179,11 @@ export default {
           })
           .then(res => {
               console.log(res);
+            this.signinworng = true;
+            this.signinmsg = res.data.msg;
           });
       } else {
+        this.signinmsg = "两次密码不一致，请确认！";
         this.signinworng = true;
       }
     }
