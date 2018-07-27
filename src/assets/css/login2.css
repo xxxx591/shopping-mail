@@ -43,6 +43,7 @@ input::-ms-clear {
   opacity: 0.3;
   top: 0;
   left: 0;
+  z-index: 99999;
 }
 
 .login {

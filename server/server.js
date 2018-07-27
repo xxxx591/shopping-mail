@@ -2,16 +2,20 @@ let express = require('express')
 
 let app = express();
 
-let mysql = require('mysql')
 let index = require('./routers/index')
 let users = require('./routers/users')
 let shoppingCart = require('./routers/shoppingCart')
 let loginup = require('./routers/loginup')
+let carts = require('./routers/carts')
+
+
+
 
 app.use('/', index);
 app.use('/users', users);
 app.use('/shoppingCart', shoppingCart);
 app.use('/loginup', loginup);
+app.use('/carts', carts);
 
 
 

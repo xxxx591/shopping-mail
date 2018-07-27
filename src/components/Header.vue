@@ -54,7 +54,7 @@
                 <div class="pwdArea" id="pwdArea">
                   <label class="input-tips" for="p">密码：</label>
                   <div class="inputOuter" id="pArea">
-                    <input type="password" id="p" name="password" v-model="userpwd" class="inputstyle" />
+                    <input type="password" id="p" name="password" v-model="userpwd" class="inputstyle" @keyup.enter="userLogin"/>
                   </div>
                 </div>
                 <div v-show="worngpwd">
