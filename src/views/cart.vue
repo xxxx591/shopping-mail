@@ -19,7 +19,7 @@
           <li v-for="(val,index) of goodList" :key="index">
             <div class="cart-tab-1">
               <div class="cart-item-check">
-                <a href="javascipt:;" class="checkbox-btn item-check-btn" :class="{'check':val.checked=='1'}" @click="select(index)">
+                <a href="javascipt:;" class="checkbox-btn item-check-btn" :class="{'check':val.checked=='1'}" @click="edit('check',val)">
                   
                 </a>
               </div>
@@ -37,9 +37,9 @@
               <div class="item-quantity">
                 <div class="select-self select-self-open">
                   <div class="select-self-area">
-                    <a class="input-sub">-</a>
+                    <a class="input-sub" @click="edit('minus',val)">-</a>
                     <span class="select-ipt">{{val.productNum}}</span>
-                    <a class="input-add">+</a>
+                    <a class="input-add" @click="edit('add',val)">+</a>
                   </div>
                 </div>
               </div>
@@ -116,11 +116,33 @@ export default {
           this.goodList = res.data.result;
           this.goodList.forEach(item => {
             if (item.checked == "1") {
-              this.total = this.total += item.productPrice;
+              this.total = this.total += item.productPrice * item.productNum;
             }
           });
         }
       });
+    },
+    edit(falg, item) {
+      if (falg == "add") {
+        item.productNum++;
+      } else if (falg == "minus") {
+        if (item.productNum <= 1) {
+          return;
+        }
+        item.productNum--;
+      } else {
+        console.log("006");
+        item.checked = item.checked == "1" ? "0" : "1";
+      }
+      axios
+        .post("/api/carts/edits", {
+          productNum: item.productNum,
+          productId: item.productId,
+          checked: item.checked
+        })
+        .then(res => {
+          console.log(res);
+        });
     }
   }
 };
