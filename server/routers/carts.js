@@ -69,22 +69,15 @@ router.post('/edits', bodyParser.json(), (req, res, next) => {
   connection.query(updatesql, updatearr, (err, result) => {
 
     if (err) throw err.message;
-    if (result[0]) {
-      res.json({
-        static: "1",
-        msg: '修改成功',
-        result
-      })
-    } else {
-      res.json({
-        static: "2",
-        msg: "修改失败"
+    res.json({
+      static: "1",
+      msg: '修改成功',
+      result
+    })
 
-      })
-    }
   })
   connection.end();
- 
+
 })
 
 
