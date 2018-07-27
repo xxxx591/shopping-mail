@@ -131,7 +131,6 @@ export default {
         }
         item.productNum--;
       } else {
-        console.log("006");
         item.checked = item.checked == "1" ? "0" : "1";
       }
       axios
