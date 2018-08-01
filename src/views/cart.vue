@@ -62,12 +62,7 @@
       <div class="cart-foot-inner">
         <div class="cart-foot-l">
           <div class="item-all-check">
-            <a href="javascipt:;">
-              <span class="checkbox-btn item-check-btn">
-                
-              </span>
-              <span>Select all</span>
-            </a>
+            
           </div>
         </div>
         <div class="cart-foot-r">
@@ -76,7 +71,7 @@
             <span class="total-price">{{total}}</span>
           </div>
           <div class="btn-wrap">
-            <a class="btn btn--red">Checkout</a>
+            <a class="btn btn--red">立即购买</a>
           </div>
         </div>
       </div>
@@ -141,7 +136,10 @@ export default {
         })
         .then(res => {
           console.log(res);
+          this.total = 0;
+          this.init()
         });
+
     }
   }
 };

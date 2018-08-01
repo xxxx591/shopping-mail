@@ -7,6 +7,7 @@ let users = require('./routers/users')
 let shoppingCart = require('./routers/shoppingCart')
 let loginup = require('./routers/loginup')
 let carts = require('./routers/carts')
+let address = require('./routers/address')
 
 
 
@@ -16,6 +17,7 @@ app.use('/users', users);
 app.use('/shoppingCart', shoppingCart);
 app.use('/loginup', loginup);
 app.use('/carts', carts);
+app.use('/address', address);
 
 
 
