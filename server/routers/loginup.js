@@ -116,20 +116,61 @@ router.get('/usercheck', bodyParser.json(), (req, res, next) => {
   });
   connection.query(sql, (err, result) => {
     if (err) throw err.message;
-    if(result[0]){
+    if (result[0]) {
       res.json({
-        state:'1',
-        msg:'用户登录未过期',
-        result:result
+        state: '1',
+        msg: '用户登录未过期',
+        result: result
       })
-    }else{
+    } else {
       res.json({
-        state:'2',
-        msg:'用户登录已过期'
+        state: '2',
+        msg: '用户登录已过期'
       })
     }
     connection.end();
   })
 })
+
+router.get('/cartcheck', bodyParser.json(), (req, res, next) => {
+  let userid = req.headers.cookie.split('userId=')[1];
+  let sql = `
+  SELECT 
+  * 
+  FROM 
+  catList cl 
+  WHERE
+  1=1 
+  AND
+  user_id = ${userid}`;
+
+  let connection = mysql.createConnection(config);
+  connection.connect(err => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("数据库连接成功");
+    }
+  });
+  connection.query(sql, (err, result) => {
+    if (err) throw err.message;
+    if (result[0]) {
+      res.json({
+        state: '1',
+        msg: '用户登录未过期',
+        result: result
+      })
+    } else {
+      res.json({
+        state: '2',
+        msg: '用户登录已过期'
+      })
+    }
+    connection.end();
+  })
+})
+
+
+
 
 module.exports = router;

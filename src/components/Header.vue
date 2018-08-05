@@ -20,7 +20,7 @@
           <a href="javascript:void(0)" class="navbar-link" @click="login()" v-else>登录</a>
           <a href="javascript:void(0)" class="navbar-link" v-if="nickName" @click="logout()">退出</a>
           <div class="navbar-cart-container">
-            <span class="navbar-cart-count"></span>
+            <span class="navbar-cart-count">{{cartCount}}</span>
             <a class="navbar-link navbar-cart-link" href="/#/cart">
               <svg class="navbar-cart-logo">
                 <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-cart"></use>
@@ -121,107 +121,120 @@
   </header>
 </template>
 <script>
-  import "@/assets/css/login2.css";
-  import axios from "axios";
-  export default {
-    data() {
-      return {
-        msg: "头部页面",
-        loginShow: false,
-        showmodle: true,
-        username: "",
-        userpwd: "",
-        againpwd: "",
-        userphone: "",
-        worngpwd: false,
-        signinworng: false,
-        signinmsg: "",
-      };
+import "@/assets/css/login2.css";
+import axios from "axios";
+export default {
+  data() {
+    return {
+      msg: "头部页面",
+      loginShow: false,
+      showmodle: true,
+      username: "",
+      userpwd: "",
+      againpwd: "",
+      userphone: "",
+      worngpwd: false,
+      signinworng: false,
+      signinmsg: ""
+    };
+  },
+  computed: {
+    nickName() {
+      return this.$store.state.nickName;
     },
-    computed: {
-      nickName() {
-        return this.$store.state.nickName
-      }
+    cartCount(){
+      return this.$store.state.cartCount
+    }
+  },
+  mounted() {
+    this.usercheck();
+    this.cartCheck();
+  },
+  methods: {
+    login() {
+      this.loginShow = true;
     },
-    mounted() {
-     this.usercheck();
+    loginup() {
+      this.showmodle = true;
     },
-    methods: {
-      login() {
-        this.loginShow = true;
-      },
-      loginup() {
-        this.showmodle = true;
-      },
-      loginin() {
-        this.showmodle = false;
-      },
-      cancelLogin() {
-        this.loginShow = false;
-      },
-      // 查询
-      usercheck(){
-        axios.get('/api/loginup/usercheck').then(res=>{
-          console.log(res);
-          if(res.data.state == '1'){
-              this.$store.commit('updateUserInfo',res.data.result["0"].username)
-              console.log(res);
+    loginin() {
+      this.showmodle = false;
+    },
+    cancelLogin() {
+      this.loginShow = false;
+    },
+    // 查询
+    usercheck() {
+      axios.get("/api/loginup/usercheck").then(res => {
+        if (res.data.state == "1") {
+          this.$store.commit("updateUserInfo", res.data.result["0"].username);
+        }
+      });
+    },
+    // 购物车数量
+    cartCheck() {
+      axios.get("/api/loginup/cartcheck").then(res => {
+        let arr = res.data.result;
+        if (res.data.state == "1") {
+          let cartCount = 0;
+          arr.forEach(item => {
+            cartCount = cartCount += item.productNum;
+          });
+          this.$store.commit('updateCartCount',cartCount)
+        }
+      });
+    },
+    // 登录
+    userLogin() {
+      axios
+        .post("/api/loginup/register", {
+          params: {
+            username: this.username,
+            userpwd: this.userpwd
           }
         })
-      },
-      // 登录
-      userLogin() {
+        .then(res => {
+          console.log(res);
+          if (res.data.static != 1) {
+            this.worngpwd = true;
+            console.log("登录失败");
+          } else {
+            this.worngpwd = false;
+            console.log("登录成功");
+            this.loginShow = false;
+            this.$store.commit("updateUserInfo", res.data.username);
+          }
+        });
+    },
+    // 注册
+    signin() {
+      if (this.userpwd == this.againpwd) {
         axios
-          .post("/api/loginup/register", {
+          .post("/api/loginup/signin", {
             params: {
               username: this.username,
-              userpwd: this.userpwd
+              userpwd: this.userpwd,
+              userphone: this.userphone
             }
           })
           .then(res => {
             console.log(res);
-            if (res.data.static != 1) {
-              this.worngpwd = true;
-              console.log("登录失败");
-            } else {
-              this.worngpwd = false;
-              console.log("登录成功");
-              this.loginShow = false;
-              this.nickName = res.data.username;
-            }
+            this.signinworng = true;
+            this.signinmsg = res.data.msg;
           });
-      },
-      // 注册
-      signin() {
-        if (this.userpwd == this.againpwd) {
-          axios
-            .post("/api/loginup/signin", {
-              params: {
-                username: this.username,
-                userpwd: this.userpwd,
-                userphone: this.userphone
-              }
-            })
-            .then(res => {
-              console.log(res);
-              this.signinworng = true;
-              this.signinmsg = res.data.msg;
-            });
-        } else {
-          this.signinmsg = "两次密码不一致，请确认！";
-          this.signinworng = true;
-        }
-      },
-      // 退出登录
-      logout() {
-        axios.post("/api/loginup/logout").then(res => {
-          this.nickName = '';
-
-        });
+      } else {
+        this.signinmsg = "两次密码不一致，请确认！";
+        this.signinworng = true;
       }
+    },
+    // 退出登录
+    logout() {
+      axios.post("/api/loginup/logout").then(res => {
+        this.$store.commit("updateUserInfo", "");
+      });
     }
-  };
-
+  }
+};
 </script>
 
 
