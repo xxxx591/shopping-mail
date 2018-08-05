@@ -7,6 +7,9 @@ import vuex from 'Vuex'
 import VueLazyLoad from 'vue-lazyload'
 import infiniteScroll from 'vue-infinite-scroll'
 
+Vue.use(vuex)
+
+
 Vue.use(infiniteScroll)
 
 Vue.use(VueLazyLoad, {
@@ -18,10 +21,25 @@ import '@/assets/css/login.css'
 import '@/assets/css/product.css'
 Vue.config.productionTip = false
 
+const store = new vuex.Store({
+  state: {
+    nickName: '',
+    cartCount: 0
+  },
+  mutations: {
+    updateUserInfo(state, nickName) {
+      state.nickName = nickName;
+    },
+    updateCartCount(state, cartCount) {
+      state.cartCount += cartCount;
+    }
+  }
+})
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
+  store,
   components: {
     App
   },

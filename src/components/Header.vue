@@ -54,7 +54,7 @@
                 <div class="pwdArea" id="pwdArea">
                   <label class="input-tips" for="p">密码：</label>
                   <div class="inputOuter" id="pArea">
-                    <input type="password" id="p" name="password" v-model="userpwd" class="inputstyle" @keyup.enter="userLogin"/>
+                    <input type="password" id="p" name="password" v-model="userpwd" class="inputstyle" @keyup.enter="userLogin" />
                   </div>
                 </div>
                 <div v-show="worngpwd">
@@ -80,37 +80,37 @@
               <li>
                 <label for="user" class="input-tips2">用户名：</label>
                 <div class="inputOuter2">
-                  <input type="text" id="user" name="user" maxlength="16" class="inputstyle2" v-model="username"/>
+                  <input type="text" id="user" name="user" maxlength="16" class="inputstyle2" v-model="username" />
                 </div>
               </li>
               <li>
                 <label for="passwd" class="input-tips2">密码：</label>
                 <div class="inputOuter2">
-                  <input type="password" id="passwd" name="passwd" maxlength="16" class="inputstyle2" v-model="userpwd"/>
+                  <input type="password" id="passwd" name="passwd" maxlength="16" class="inputstyle2" v-model="userpwd" />
                 </div>
               </li>
               <li>
                 <label for="passwd2" class="input-tips2">确认密码：</label>
                 <div class="inputOuter2">
-                  <input type="password" id="passwd2" name="" maxlength="16" class="inputstyle2"  v-model="againpwd"/>
+                  <input type="password" id="passwd2" name="" maxlength="16" class="inputstyle2" v-model="againpwd" />
                 </div>
               </li>
               <li>
                 <label for="qq" class="input-tips2">联系方式：</label>
                 <div class="inputOuter2">
-                  <input type="text" id="phone" name="phone" maxlength="11" class="inputstyle2" v-model="userphone"/>
+                  <input type="text" id="phone" name="phone" maxlength="11" class="inputstyle2" v-model="userphone" />
                 </div>
               </li>
               <li>
-                  <div v-show="signinworng">
-                  <p style="color:red;font-size:14px;" >
+                <div v-show="signinworng">
+                  <p style="color:red;font-size:14px;">
                     {{signinmsg}}
                   </p>
                 </div>
               </li>
               <li>
                 <div class="inputArea" style="text-align:center">
-                  <input type="button" id="reg" class="button_blue" value="立即注册" @click="signin()"/>
+                  <input type="button" id="reg" class="button_blue" value="立即注册" @click="signin()" />
                 </div>
               </li>
             </ul>
@@ -121,88 +121,107 @@
   </header>
 </template>
 <script>
-import "@/assets/css/login2.css";
-import axios from "axios";
-export default {
-  data() {
-    return {
-      msg: "头部页面",
-      loginShow: false,
-      showmodle: true,
-      username: "",
-      userpwd: "",
-      againpwd: "",
-      userphone: "",
-      worngpwd: false,
-      signinworng: false,
-      signinmsg: "",
-      nickName: ""
-    };
-  },
-  methods: {
-    login() {
-      this.loginShow = true;
+  import "@/assets/css/login2.css";
+  import axios from "axios";
+  export default {
+    data() {
+      return {
+        msg: "头部页面",
+        loginShow: false,
+        showmodle: true,
+        username: "",
+        userpwd: "",
+        againpwd: "",
+        userphone: "",
+        worngpwd: false,
+        signinworng: false,
+        signinmsg: "",
+      };
     },
-    loginup() {
-      this.showmodle = true;
+    computed: {
+      nickName() {
+        return this.$store.state.nickName
+      }
     },
-    loginin() {
-      this.showmodle = false;
+    mounted() {
+     this.usercheck();
     },
-    cancelLogin() {
-      this.loginShow = false;
-    },
-
-    userLogin() {
-      axios
-        .post("/api/loginup/register", {
-          params: {
-            username: this.username,
-            userpwd: this.userpwd
+    methods: {
+      login() {
+        this.loginShow = true;
+      },
+      loginup() {
+        this.showmodle = true;
+      },
+      loginin() {
+        this.showmodle = false;
+      },
+      cancelLogin() {
+        this.loginShow = false;
+      },
+      // 查询
+      usercheck(){
+        axios.get('/api/loginup/usercheck').then(res=>{
+          console.log(res);
+          if(res.data.state == '1'){
+              this.$store.commit('updateUserInfo',res.data.result["0"].username)
+              console.log(res);
           }
         })
-        .then(res => {
-          console.log(res);
-          if (res.data.static != 1) {
-            this.worngpwd = true;
-            console.log("登录失败");
-          } else {
-            this.worngpwd = false;
-            console.log("登录成功");
-            this.loginShow = false;
-            this.nickName = res.data.username;
-          }
-        });
-    },
-    signin() {
-      if (this.userpwd == this.againpwd) {
+      },
+      // 登录
+      userLogin() {
         axios
-          .post("/api/loginup/signin", {
+          .post("/api/loginup/register", {
             params: {
               username: this.username,
-              userpwd: this.userpwd,
-              userphone: this.userphone
+              userpwd: this.userpwd
             }
           })
           .then(res => {
             console.log(res);
-            this.signinworng = true;
-            this.signinmsg = res.data.msg;
+            if (res.data.static != 1) {
+              this.worngpwd = true;
+              console.log("登录失败");
+            } else {
+              this.worngpwd = false;
+              console.log("登录成功");
+              this.loginShow = false;
+              this.nickName = res.data.username;
+            }
           });
-      } else {
-        this.signinmsg = "两次密码不一致，请确认！";
-        this.signinworng = true;
-      }
-    },
-    logout() {
-      axios.post("/api/loginup/logout").then(res => {
+      },
+      // 注册
+      signin() {
+        if (this.userpwd == this.againpwd) {
+          axios
+            .post("/api/loginup/signin", {
+              params: {
+                username: this.username,
+                userpwd: this.userpwd,
+                userphone: this.userphone
+              }
+            })
+            .then(res => {
+              console.log(res);
+              this.signinworng = true;
+              this.signinmsg = res.data.msg;
+            });
+        } else {
+          this.signinmsg = "两次密码不一致，请确认！";
+          this.signinworng = true;
+        }
+      },
+      // 退出登录
+      logout() {
+        axios.post("/api/loginup/logout").then(res => {
           this.nickName = '';
 
-      });
+        });
+      }
     }
-  }
-};
+  };
+
 </script>
 
-<style scoped>
-</style>
+
