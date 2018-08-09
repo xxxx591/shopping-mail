@@ -1,6 +1,6 @@
 # shopping-mail
 
-> 模仿慕课网仿写了一个vue商城，技术栈：vue-cli vuex node MYSQL
+> 模仿慕课网仿写了一个vue商城，技术栈：vue-cli vuex node MYSQL 1
 
 ## Build Setup
 
