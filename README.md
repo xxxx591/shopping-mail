@@ -1,12 +1,12 @@
 # shopping-mail
 
-> 模仿慕课网仿写了一个vue商城，技术栈：vue-cli vuex node mysql 
+> 模仿慕课网仿写了一个vue商城，技术栈：vue-cli vuex node MYSQL
 
 ## Build Setup
 
 ``` bash
 # install dependencies
-npm install
+npm install 
 
 # serve with hot reload at localhost:8080
 npm run dev
